@@ -23,11 +23,19 @@ class mj2i(Star):
         self.wenzhang = config.get(
             "wenzhang", "请生成一篇文章。用markdown格式"
         )
-    async def initialize(self):
-        """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
     
-    # 注册指令的装饰器。指令名为 helloworld。注册成功后，发送 `/helloworld` 就会触发这个指令，并回复 `你好, {user_name}!`
-    
+
+    async def filter_llm_thought_tags(self,llm_response: str) -> str:
+        # 正则表达式模式保持不变
+        # r'<think>.*?</think>\s*' 匹配<think>标签、其所有内容、闭合标签以及之后的所有空白
+        pattern = r'<think>.*?</think>\s*'
+        
+        # 使用re.sub执行替换，re.DOTALL确保可以匹配换行符
+        cleaned_response = re.sub(pattern, '', llm_response, flags=re.DOTALL)
+        
+        return cleaned_response
+        
+        
     #llm数学文章渲染
     @filter.command("mj2i")
     async def m2i(self, event: AiocqhttpMessageEvent):
@@ -40,7 +48,7 @@ class mj2i(Star):
         contexts: list[dict] = [ {'role': 'user', 'content': message_str}]
         yield event.plain_result("正在生成")
         llm_respond = await self.get_llm_respond(message_str,contexts)
-        
+        llm_respond = self.filter_llm_thought_tags(llm_respond)
         if llm_respond:
             #生成渲染出来的图片保存在本地
             try:
@@ -85,7 +93,7 @@ class mj2i(Star):
 
         
         llm_respond = await self.get_llm_responds(message_str,contexts)
-        
+        llm_respond = self.filter_llm_thought_tags(llm_respond)
         if llm_respond:
             #生成渲染出来的图片保存在本地
             try:
@@ -115,7 +123,7 @@ class mj2i(Star):
             yield event.plain_result("文章生成失败")
             
             
-    @filter.command("m2i") # 注意：这里与上面的 m2i 命令重名了，但根据你的代码结构，这个是处理纯 MathJax 公式转图片的
+    @filter.command("m2i")
     async def m2iz(self, event: AiocqhttpMessageEvent):
         user_name = event.get_sender_name()
         message_str = event.message_str # 用户发的纯文本消息字符串
@@ -224,6 +232,8 @@ class mj2i(Star):
             logger.error(f"LLM 调用失败：{e}")
             # 这里不向用户发送消息，因为调用者会检查返回值 None
             return None
+            
+    
     
     
         
