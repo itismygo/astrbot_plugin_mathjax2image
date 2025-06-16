@@ -25,15 +25,7 @@ class mj2i(Star):
         )
     
 
-    async def filter_llm_thought_tags(self,llm_response: str) -> str:
-        # 正则表达式模式保持不变
-        # r'<think>.*?</think>\s*' 匹配<think>标签、其所有内容、闭合标签以及之后的所有空白
-        pattern = r'<think>.*?</think>\s*'
-        
-        # 使用re.sub执行替换，re.DOTALL确保可以匹配换行符
-        cleaned_response = re.sub(pattern, '', llm_response, flags=re.DOTALL)
-        
-        return cleaned_response
+    
         
         
     #llm数学文章渲染
@@ -48,7 +40,7 @@ class mj2i(Star):
         contexts: list[dict] = [ {'role': 'user', 'content': message_str}]
         yield event.plain_result("正在生成")
         llm_respond = await self.get_llm_respond(message_str,contexts)
-        llm_respond = self.filter_llm_thought_tags(llm_respond)
+        llm_respond = await self.filter_llm_thought_tags(llm_respond)
         if llm_respond:
             #生成渲染出来的图片保存在本地
             try:
@@ -93,7 +85,7 @@ class mj2i(Star):
 
         
         llm_respond = await self.get_llm_responds(message_str,contexts)
-        llm_respond = self.filter_llm_thought_tags(llm_respond)
+        llm_respond = await self.filter_llm_thought_tags(llm_respond)
         if llm_respond:
             #生成渲染出来的图片保存在本地
             try:
@@ -210,6 +202,16 @@ class mj2i(Star):
             logger.error(f"LLM 调用失败：{e}")
             # 这里不向用户发送消息，因为调用者会检查返回值 None
             return None
+            
+    async def filter_llm_thought_tags(self,llm_response: str) -> str:
+        # 正则表达式模式保持不变
+        # r'<think>.*?</think>\s*' 匹配<think>标签、其所有内容、闭合标签以及之后的所有空白
+        pattern = r'<think>.*?</think>\s*'
+        
+        # 使用re.sub执行替换，re.DOTALL确保可以匹配换行符
+        cleaned_response = re.sub(pattern, '', llm_response, flags=re.DOTALL)
+        
+        return cleaned_response
             
             
             
