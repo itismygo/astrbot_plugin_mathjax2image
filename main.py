@@ -1,6 +1,6 @@
 from astrbot.api.event import filter
 import astrbot.api.message_components as Comp
-from astrbot.api.star import Context, Star, register , Startools
+from astrbot.api.star import Context, Star, register , StarTools
 from astrbot import logger
 from astrbot.core.platform.sources.aiocqhttp.aiocqhttp_message_event import (
     AiocqhttpMessageEvent,
