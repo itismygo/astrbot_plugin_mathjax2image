@@ -1,4 +1,4 @@
-from astrbot.api.star import Startools
+from astrbot.api.star import StarTools
 from .markdown_to_html import convert_markdown_to_html
 from .render_and_screenshot import render_and_screenshot
 from astrbot import logger
