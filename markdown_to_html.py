@@ -17,7 +17,7 @@ def convert_markdown_to_html(md_text):
         html_template = f.read()    
 
     # 替换模板中的 body 内容
-    full_html = html_template.replace("<!-- CONTENT_PLACEHOLDER -->", html_body)
+    full_html = html_template.replace("{{CONTENT}}", html_body)
 
 
     return full_html
