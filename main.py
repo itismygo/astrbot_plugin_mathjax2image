@@ -38,7 +38,7 @@ class mj2i(Star):
         message_chain = event.get_messages() # 用户所发的消息的消息链 # from astrbot.api.message_components import *
         message_str = message_str[4:]  # 从第6个字符开始取到最后
         contexts: list[dict] = [ {'role': 'user', 'content': message_str}]
-        
+        yield event.plain_result("正在生成")
         llm_respond = await self.get_llm_respond(message_str,contexts)
         
         if llm_respond:
