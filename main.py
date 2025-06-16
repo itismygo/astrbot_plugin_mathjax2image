@@ -19,7 +19,7 @@ class mj2i(Star):
         self.config = config
         self.system_prompt_template = config.get(
             "system_prompt_template", "写一篇文章，用markdown格式。其中数学公式用mathjax格式。由于要进行markdown转html渲染，\之类的要改成\\,美元符号之间不要有中文字符。不同段用分割线分割。美元符号之间不要有中文字符"
-        )#求写一篇文章,用markdown格式,其中数学公式用mathjax格式,由于要进行markdown转html渲染,\\之类的要改成\\\\
+        )
         self.wenzhang = config.get(
             "wenzhang", "用markdown格式"
         )
@@ -120,14 +120,6 @@ class mj2i(Star):
         user_name = event.get_sender_name()
         message_str = event.message_str # 用户发的纯文本消息字符串
         logger.info(f"获取用户指令：{message_str}")
-        # message_chain = event.get_messages() # 用户所发的消息的消息链 # from astrbot.api.message_components import *
-
-        # 修正：只切片一次，去除命令前缀 "m2i " (假设命令是 m2i 后面跟一个空格)
-        # 如果命令只是 m2i 没有空格，那切片应该是 message_str[3:]
-        # 根据你的日志 "m2i $x = ...$"，看起来是 "m2i " 后面跟内容，所以切片4个字符可能更准确
-        # 但你的代码用了 message_str[3:]，我们先按你的代码逻辑来，只切掉 "m2i"
-        message_content = message_str[3:].strip() # 切掉 "m2i" 并去除首尾空白
-
         logger.info(f"待处理的MathJax字符串: {message_content}")
 
         # 修正：调用 self.ffm 时，将切片后的字符串作为参数
