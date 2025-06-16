@@ -18,7 +18,7 @@ class mj2i(Star):
         super().__init__(context)
         self.config = config
         self.system_prompt_template = config.get(
-            "system_prompt_template", "写一篇文章，用markdown格式。其中数学公式用mathjax格式。由于要进行markdown转html渲染，\之类的要改成\\,美元符号之间不要有中文字符。不同段用分割线分割。美元符号之间不要有中文字符"
+            "system_prompt_template", "写一篇文章，用markdown格式。其中数学公式用mathjax格式。由于要进行markdown转html渲染，\之类的要改成\\,美元符号之间不要有中文字符。可以用latex中的boxed来框住一些关键公式。不同段用分割线分割。美元符号之间不要有中文字符。"
         )
         self.wenzhang = config.get(
             "wenzhang", "用markdown格式"
