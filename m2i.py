@@ -9,7 +9,7 @@ def m2ipy(md_text):
     html_content = convert_markdown_to_html(md_text)
     logger.info("转化成html成功")
     # 渲染并截图
-    output_dir = StarTools.get_data_dir()
+    output_dir = StarTools.get_data_dir('astrbot_plugin_mathjax2image')
     output_path = output_dir / "output.png"
     render_and_screenshot(html_content,output_path)
 
