@@ -56,7 +56,7 @@ class mj2i(Star):
                 # 检查文件是否存在，虽然 m2ipy 成功了，但文件创建仍可能失败
                 if not opath.exists():
                      logger.error(f"渲染后的图片文件未生成: {opath}")
-                     yield event.chain_result([Comp.Text("文章图片文件未生成，请检查日志。")])
+                     yield event.plain_result(f"文章图片文件未生成，请检查日志。")
                      return # 文件不存在，提前返回
 
                 chain = [
