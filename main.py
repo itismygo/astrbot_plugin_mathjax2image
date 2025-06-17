@@ -99,7 +99,7 @@ class mj2i(Star):
                 # 检查文件是否存在
                 if not opath.exists():
                      logger.error(f"渲染后的图片文件未生成: {opath}")
-                     yield event.chain_result([Comp.Text("文章图片文件未生成，请检查日志。")])
+                     yield event.plain_result("文章图片文件未生成，请检查日志。")
                      return # 文件不存在，提前返回
 
                 chain = [
@@ -140,7 +140,7 @@ class mj2i(Star):
             # 检查文件是否存在
             if not opath.exists():
                  logger.error(f"公式图片文件未生成: {opath}")
-                 yield event.chain_result([Comp.Text("公式图片文件未生成，请检查日志。")])
+                 yield event.plain_result("公式图片文件未生成，请检查日志。")
                  return # 文件不存在，提前返回
 
             logger.info(f"准备发送图片: {opath}")
@@ -151,7 +151,7 @@ class mj2i(Star):
 
         except Exception as e:
             logger.error(f"发送公式图片失败: {e}")
-            yield event.chain_result([Comp.Text(f"发送公式图片失败: {e}")])
+            yield event.plain_result(f"发送公式图片失败: {e}")
 
 
     # 修正：将 ffm 定义为类的方法，并添加 self 参数
