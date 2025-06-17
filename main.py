@@ -120,7 +120,7 @@ class mj2i(Star):
         user_name = event.get_sender_name()
         message_str = event.message_str # 用户发的纯文本消息字符串
         logger.info(f"获取用户指令：{message_str}")
-        logger.info(f"待处理的MathJax字符串: {message_content}")
+        logger.info(f"待处理的MathJax字符串: {message_str}")
 
         # 修正：调用 self.ffm 时，将切片后的字符串作为参数
         # 并且 ffm 现在是类的方法，需要 self 参数
