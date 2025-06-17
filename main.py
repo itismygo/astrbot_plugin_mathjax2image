@@ -125,7 +125,7 @@ class mj2i(Star):
         # 修正：调用 self.ffm 时，将切片后的字符串作为参数
         # 并且 ffm 现在是类的方法，需要 self 参数
         # ffm 只是字符串处理，不太会出错，不加try
-        formatted_mathjax_str = await self.ffm(message_content)
+        formatted_mathjax_str = await self.ffm(message_str)
 
         # 调用 m2ipy 函数，这个函数应该接收处理后的字符串
         # 确保 m2ipy 函数存在并能正确处理 formatted_mathjax_str
