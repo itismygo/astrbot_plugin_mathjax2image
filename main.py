@@ -118,7 +118,7 @@ class mj2i(Star):
     @filter.command("m2i")
     async def m2iz(self, event: AiocqhttpMessageEvent):
         user_name = event.get_sender_name()
-        message_str = event.message_str # 用户发的纯文本消息字符串
+        message_str = event.message_str[4:]# 用户发的纯文本消息字符串
         logger.info(f"获取用户指令：{message_str}")
         logger.info(f"待处理的MathJax字符串: {message_str}")
 
