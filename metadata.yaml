@@ -2,4 +2,4 @@ name: Mathjax2image
 desc: 用于调用llm生成数学文章，并支持mathjax渲染。 # 插件简短描述
 version: v1.0 # 插件版本号。格式：v1.1.1 或者 v1.1
 author: Willixrain # 作者
-repo: https://github.com/Soulter/helloworld # 插件的仓库地址
+repo: https://github.com/itismygo/astrbot_plugin_mathjax2image # 插件的仓库地址
