@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import urllib.request
 #调用llm生成数学文章并渲染
 @register("astrbot_plugin_mathjax2image", "Willixrain", "调用llm生成支持mathjax渲染文章的图片", "1.0.0")
 class mj2i(Star):
@@ -23,7 +24,41 @@ class mj2i(Star):
         self.wenzhang = config.get(
             "wenzhang", "用markdown格式"
         )
-    
+
+        # 自动检查并下载 MathJax
+        self._ensure_mathjax_installed()
+
+    def _ensure_mathjax_installed(self):
+        """检查 MathJax 是否已安装，如果没有则自动下载"""
+        try:
+            # 获取插件目录
+            plugin_dir = Path(__file__).resolve().parent
+            mathjax_file = plugin_dir / "static" / "mathjax" / "tex-chtml.js"
+
+            # 如果文件已存在，跳过下载
+            if mathjax_file.exists():
+                logger.info(f"MathJax 已安装: {mathjax_file}")
+                return
+
+            # 创建目录
+            mathjax_file.parent.mkdir(parents=True, exist_ok=True)
+
+            # 下载 MathJax
+            logger.info("首次使用插件，正在自动下载 MathJax 离线包...")
+            mathjax_url = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+
+            urllib.request.urlretrieve(mathjax_url, mathjax_file)
+
+            file_size = mathjax_file.stat().st_size / 1024
+            logger.info(f"MathJax 下载成功！文件大小: {file_size:.2f} KB")
+            logger.info(f"保存位置: {mathjax_file}")
+
+        except Exception as e:
+            logger.error(f"MathJax 自动下载失败: {e}")
+            logger.error("请手动运行: python install_mathjax.py")
+            logger.error("或手动下载 https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js")
+            logger.error(f"并保存到: {plugin_dir / 'static' / 'mathjax' / 'tex-chtml.js'}")
+
 
     
         
