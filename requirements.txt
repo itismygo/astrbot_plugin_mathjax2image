@@ -1,3 +1,4 @@
 selenium
 markdown
 pathlib
+webdriver-manager
