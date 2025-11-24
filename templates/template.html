@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Markdown Render</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <!-- 移除 polyfill.io，现代浏览器已内置 ES6 支持 -->
     <style>
     html, body {
         width: 1100px !important;
@@ -13,20 +13,8 @@
         font-size:38px;
     }
     </style>
-    <style>
-        @font-face {
-            font-family: 'TeXGyreScholaMath';
-            src: url('/static/fonts/TeXGyreSchola-Regular.woff2') format('woff2');
-            font-weight: normal;
-            font-style: normal;
-        }
 
-        .MathJax {
-            font-family: 'TeXGyreScholaMath', 'Latin Modern Math', serif !important;
-        }
-    </style>
-    
-    <script id="MathJax-script" async>
+    <script id="MathJax-config">
         window.MathJax = {
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -36,30 +24,34 @@
             loader: {
                 load: ['[tex]/ams']
             },
-            svg: {
-                fontCache: 'global',
-                scale: 1.0,
-                useFontCache: false,
-                fontFamily: "'TeXGyreScholaMath', 'Latin Modern Math', serif"
+            chtml: {
+                fontCache: 'none',  // 禁用字体缓存，加快加载
+                scale: 1.0
+            },
+            startup: {
+                ready: () => {
+                    console.log('MathJax is ready');
+                    MathJax.startup.defaultReady();
+                    MathJax.startup.promise.then(() => {
+                        console.log('MathJax initial typesetting complete');
+                        window.mathJaxReady = true;
+                    });
+                }
             }
         };
     </script>
-    <script async
-            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-    </script>
+
     <style>
         body {
-            font-family: 'Noto Sans CJK', 'WenQuanYi Zen Hei', sans-serif;
+            font-family: 'Noto Sans CJK', 'WenQuanYi Zen Hei', 'Microsoft YaHei', sans-serif;
             font-size: 38px;
             padding: 30px;
-        }
-        /* 强制 MathJax 使用中文字体 */
-        .MathJax {
-            font-family: 'Noto Sans CJK', 'WenQuanYi Zen Hei', sans-serif !important;
         }
     </style>
 </head>
 <body>
     {{CONTENT}}
+    <!-- 本地 MathJax 脚本放在 body 末尾加载 -->
+    <script src="../static/mathjax/tex-chtml.js"></script>
 </body>
 </html>
