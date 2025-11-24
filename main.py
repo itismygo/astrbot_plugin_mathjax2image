@@ -44,7 +44,7 @@ class mj2i(Star):
         if llm_respond:
             #生成渲染出来的图片保存在本地
             try:
-                opath = m2ipy(llm_respond)
+                opath = await m2ipy(llm_respond)
             except Exception as e:
                 logger.error(f"调用 m2ipy 渲染文章失败: {e}")
                 yield event.plain_result(f"文章渲染失败: {e}")
@@ -89,7 +89,7 @@ class mj2i(Star):
         if llm_respond:
             #生成渲染出来的图片保存在本地
             try:
-                opath = m2ipy(llm_respond)
+                opath = await m2ipy(llm_respond)
             except Exception as e:
                 logger.error(f"调用 m2ipy 渲染文章失败: {e}")
                 yield event.plain_result(f"文章渲染失败: {e}")
@@ -113,8 +113,8 @@ class mj2i(Star):
 
         else:
             yield event.plain_result("文章生成失败")
-            
-            
+
+
     @filter.command("m2i")
     async def m2iz(self, event: AiocqhttpMessageEvent):
         user_name = event.get_sender_name()
@@ -130,7 +130,7 @@ class mj2i(Star):
         # 调用 m2ipy 函数，这个函数应该接收处理后的字符串
         # 确保 m2ipy 函数存在并能正确处理 formatted_mathjax_str
         try:
-            opath = m2ipy(formatted_mathjax_str) # 假设 m2ipy 是一个全局函数或导入的函数
+            opath = await m2ipy(formatted_mathjax_str) # 假设 m2ipy 是一个全局函数或导入的函数
         except Exception as e:
             logger.error(f"调用 m2ipy 转换公式失败: {e}")
             yield event.chain_result([Comp.Text(f"转换公式失败: {e}")])
