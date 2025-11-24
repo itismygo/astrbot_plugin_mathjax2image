@@ -21,27 +21,32 @@ async def render_and_screenshot(html_content, output_image_path):
 
             page = await browser.new_page(viewport={'width': 1150, 'height': 2000})
 
-            # 加载页面
-            await page.goto(f"file://{tmpfile_path}", wait_until='networkidle')
+            # 加载页面（使用 domcontentloaded 避免等待外部 CDN 超时）
+            await page.goto(f"file://{tmpfile_path}", wait_until='domcontentloaded', timeout=60000)
             logger.info("页面加载完成")
 
-            # 等待 MathJax 渲染完成
+            # 等待 MathJax 加载和渲染完成
             try:
+                # 先等待 MathJax 脚本加载（最多 30 秒）
+                await page.wait_for_function("""
+                    () => typeof MathJax !== 'undefined' && MathJax.startup
+                """, timeout=30000)
+                logger.info("MathJax 脚本已加载")
+
+                # 等待 MathJax 渲染完成
                 await page.wait_for_function("""
                     () => {
-                        if (typeof MathJax === 'undefined') return true;
-                        if (MathJax.Hub && MathJax.Hub.queue) {
-                            return MathJax.Hub.queue.pending === 0;
-                        }
                         if (MathJax.startup && MathJax.startup.promise) {
-                            return true;
+                            return MathJax.startup.promise.then(() => true).catch(() => true);
                         }
                         return true;
                     }
                 """, timeout=15000)
+                # 额外等待确保渲染完成
+                await page.wait_for_timeout(1000)
                 logger.info("MathJax 渲染完成")
             except Exception as e:
-                logger.warning(f"MathJax 等待超时，继续截图: {e}")
+                logger.warning(f"MathJax 等待超时或加载失败，继续截图: {e}")
 
             # 删除旧截图
             if os.path.exists(output_image_path):
