@@ -1,4 +1,3 @@
-import asyncio
 from astrbot.api.star import StarTools
 from .markdown_to_html import convert_markdown_to_html
 from .render_and_screenshot import render_and_screenshot
@@ -13,8 +12,8 @@ async def m2ipy(md_text):
     output_dir = StarTools.get_data_dir('astrbot_plugin_mathjax2image')
     output_path = output_dir / "output.png"
 
-    # 在线程池中运行阻塞的 Selenium 操作，避免阻塞事件循环
-    await asyncio.to_thread(render_and_screenshot, html_content, output_path)
+    # Playwright 原生异步，直接 await
+    await render_and_screenshot(html_content, output_path)
 
     logger.info("截图成功")
     return output_path
