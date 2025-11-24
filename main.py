@@ -195,14 +195,18 @@ class mj2i(Star):
             # 这里不向用户发送消息，因为调用者会检查返回值 None
             return None
             
-    async def filter_llm_thought_tags(self,llm_response: str) -> str:
+    async def filter_llm_thought_tags(self, llm_response: str | None) -> str | None:
+        # 如果 LLM 响应为 None，直接返回 None
+        if llm_response is None:
+            return None
+
         # 正则表达式模式保持不变
         # r'<think>.*?</think>\s*' 匹配<think>标签、其所有内容、闭合标签以及之后的所有空白
         pattern = r'<think>.*?</think>\s*'
-        
+
         # 使用re.sub执行替换，re.DOTALL确保可以匹配换行符
         cleaned_response = re.sub(pattern, '', llm_response, flags=re.DOTALL)
-        
+
         return cleaned_response
             
             
